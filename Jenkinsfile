@@ -1,25 +1,37 @@
 pipeline {
-   agent any
-   stages {
-       stage("Compile and clean") {
-             steps {
-             sh "mvn clean compile"
-            }
-        }
-       stage("Test") {
-           steps {
-              sh "mvn test"
-           }
-        }
-       stage("Deploy") {
+    agent any 
+    stages {
+        stage('Compile and Clean') { 
             steps {
-               sh "mvn package"
 
+                sh "mvn clean compile"
             }
-		stage("Archiving Artifact") {
+        }
+        stage('Test') { 
             steps {
-               archiveArtifacts '**/target/*jar'
-	   }
+                sh "mvn test site"
+            }
+            
+        }
+
+        stage('deploy') { 
+            steps {
+                sh "mvn package"
+            }
+        }
+
+
+        stage('Build Docker image'){
+            steps {
+                sh 'docker build -t anvbhaskar/docker_jenkins_pipeline:${BUILD_NUMBER} .'
+            }
+        }
+   
+        
+        stage('Archving') { 
+            steps {
+                 archiveArtifacts '**/target/*.jar'
+            }
         }
     }
 }
