@@ -12,21 +12,24 @@ pipeline {
               sh "mvn test"
            }
 		   
-		   post { 
+       post { 
              always { 
                 junit allowsEmptyResults: true, testResults: 'target/surefire-reports/*.xml' 
 				}
             }
-    }
+    
+       }
+
        stage("Deploy") {
             steps {
                sh "mvn package"
 
             }
-                stage("Archiving Artifact") {
+       stage("Archiving Artifact") {
             steps {
                archiveArtifacts '**/target/*jar'
-                        }
+                   }
+
         }
     }
 }
