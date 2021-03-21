@@ -3,7 +3,7 @@ pipeline {
    stages {
        stage("Compile and clean") {
              steps {
-	     sh "printenv"
+
              sh "mvn clean compile"
             }
         }
@@ -11,16 +11,22 @@ pipeline {
            steps {
               sh "mvn test"
            }
-        }
+		   
+		   post { 
+             always { 
+                junit allowsEmptyResults: true, testResults: 'target/surefire-reports/*.xml' 
+				}
+            }
+    }
        stage("Deploy") {
             steps {
                sh "mvn package"
 
             }
-		stage("Archiving Artifact") {
+                stage("Archiving Artifact") {
             steps {
                archiveArtifacts '**/target/*jar'
-			}
+                        }
         }
     }
 }
