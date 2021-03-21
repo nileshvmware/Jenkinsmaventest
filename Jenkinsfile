@@ -19,16 +19,9 @@ pipeline {
                 sh "mvn package"
             }
         }
-
-
-        stage('Build Docker image'){
-            steps {
-                sh 'docker build -t anvbhaskar/docker_jenkins_pipeline:${BUILD_NUMBER} .'
-            }
-        }
-   
-        
-        stage('Archving') { 
+    
+          
+         stage('Archving') { 
             steps {
                  archiveArtifacts '**/target/*.jar'
             }
